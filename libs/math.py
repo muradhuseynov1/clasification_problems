@@ -14,6 +14,8 @@ def sigmoid(x):
     ##############################
     ###     YOUR CODE HERE     ###
     ##############################    
+    g = 1 / (1 + np.exp(-x))
+    
     return g
 
 def softmax(y):
