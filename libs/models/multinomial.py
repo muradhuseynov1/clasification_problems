@@ -20,6 +20,8 @@ class SoftmaxClassifier(LogisticRegression):
         ##############################
         ###     YOUR CODE HERE     ###
         ##############################
+        scores = np.dot(X, self.parameters)
+
         return scores
     
     def predict_labels(self, X: np.array) -> np.array:
@@ -35,6 +37,10 @@ class SoftmaxClassifier(LogisticRegression):
         ##############################
         ###     YOUR CODE HERE     ###
         ##############################
+        scores = self.predict(X)
+        probs = softmax(scores)
+        preds = np.argmax(probs, axis=1)
+
         return preds
     
     @staticmethod
@@ -52,6 +58,8 @@ class SoftmaxClassifier(LogisticRegression):
         ##############################
         ###     YOUR CODE HERE     ###
         ##############################
+        probs = softmax(preds)
+        loss = -np.sum(y_onehot * np.log(probs + 1e-15)) / y_onehot.shape[0]
         return loss
     
     def update_theta(self, gradient:np.array, lr:float=0.5):
@@ -68,7 +76,7 @@ class SoftmaxClassifier(LogisticRegression):
         ##############################
         ###     YOUR CODE HERE     ###
         ##############################
-        pass
+        self.parameters -= lr * gradient
     
     @staticmethod
     def compute_gradient(x: np.array, y : np.array, preds: np.array) -> np.array:
@@ -86,6 +94,13 @@ class SoftmaxClassifier(LogisticRegression):
         ##############################
         ###     YOUR CODE HERE     ###
         ##############################
+
+        probs = softmax(preds)
+        jacobian = np.dot(x.T, probs - y) / x.shape[0]
         return jacobian
-    
+
+        # x_augmented = np.hstack((x, np.ones((x.shape[0], 1))))
+
+        # jacobian = np.dot(x_augmented.T, preds - y) / x.shape[0]
+        # return jacobian
     
